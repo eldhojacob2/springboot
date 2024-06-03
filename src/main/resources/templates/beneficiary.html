@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Beneficiary Information</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <style>
+        .table-custom {
+            background-color: #fff; /* White background for readability */
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            margin-top: 20px;
+        }
+        .table-custom th, .table-custom td {
+            text-align: center; /* Center align text in table */
+            vertical-align: middle; /* Vertically align text */
+        }
+        .btn-custom {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Beneficiary Details</h1>
+        <table class="table table-hover table-custom">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <th><input type="checkbox" id="select-all"></th>
+                    <th>Name</th>
+                    <th>Relationship</th>
+                    <th>Age</th>
+                    <th>Contact Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="beneficiary : ${beneficiaries}">
+                    <td><input type="checkbox" name="selectedBeneficiary" th:value="${beneficiary.id}"></td>
+                    <td th:text="${beneficiary.name}"></td>
+                    <td th:text="${beneficiary.relationship}"></td>
+                    <td th:text="${beneficiary.age}"></td>
+                    <td th:text="${beneficiary.contactDetails}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <button class="btn btn-primary btn-custom" onclick="addBeneficiary()">Add</button>
+            <button class="btn btn-secondary btn-custom" onclick="editBeneficiary()">Edit</button>
+            <button class="btn btn-danger btn-custom" onclick="deleteBeneficiary()">Delete</button>
+        </div>
+    </div>
+</body>
+</html>

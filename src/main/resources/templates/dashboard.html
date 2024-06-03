@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Engineering Transformation Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        body {
+            padding-top: 50px; /* Adjusts for fixed navbar */
+        }
+        .navbar-custom {
+            background-color: #337ab7; /* Dark blue for better contrast */
+            color: #fff;
+        }
+        .navbar-text, .nav a {
+            font-size: 16px; /* Standard font size for better readability */
+            color: white; /* Ensures text is white */
+        }
+        .sidebar-nav {
+            height: 100%;
+            width: 200px; /* Sidebar width */
+            position: fixed;
+            top: 50px; /* Align with adjusted navbar */
+            left: 0;
+            background-color: #337ab7; /* Consistent blue for sidebar */
+            color: white; /* Ensure text is always white for visibility */
+            padding-top: 10px;
+        }
+        .sidebar-nav .nav {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar-nav .nav a {
+            padding: 10px 15px;
+            display: block;
+            color: white; /* White text for all links */
+        }
+        .sidebar-nav .nav a:hover, .sidebar-nav .nav .active a {
+            background-color: #285f8f; /* Darker blue on hover and active */
+        }
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #f2f2f2;
+            border-top: 1px solid #e5e5e5;
+            position: fixed;
+            bottom: 0;
+            left: 200px; /* Adjust footer to start where sidebar ends */
+            right: 0;
+        }
+        .container {
+            margin-left: 220px; /* Offset main content to accommodate sidebar */
+            padding: 20px; /* Padding around content */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation bar (header) -->
+    <nav class="navbar navbar-inverse navbar-fixed-top navbar-custom">
+        <div class="container-fluid">
+            <span class="navbar-text" sec:authentication="name">Logged in as User</span>
+            <ul class="nav navbar-nav navbar-right">
+                <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar navigation -->
+    <div class="sidebar-nav">
+        <ul class="nav">
+            <li class="active"><a href="#" onclick="loadContent('home')">Home</a></li>
+            <li><a href="#" onclick="loadContent('beneficiary')">Beneficiary</a></li>
+            <li><a href="#" onclick="loadContent('pension')">Pension Product</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content area -->
+    <div class="container" id="content-area">
+        <h1>Welcome to Engineering Transformation Dashboard</h1>
+        <p>Explore the sections using the navigation menu on the left.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Engineering Transformation. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Add Beneficiary Modal -->
+    <div id="addBeneficiaryModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Beneficiary</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBeneficiaryForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="relationship">Relationship</label>
+                            <input type="text" class="form-control" id="relationship" name="relationship" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" class="form-control" id="age" name="age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactDetails">Contact Details</label>
+                            <input type="text" class="form-control" id="contactDetails" name="contactDetails" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Beneficiary Modal -->
+    <div id="editBeneficiaryModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Beneficiary</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editBeneficiaryForm">
+                        <input type="hidden" id="editId" name="id">
+                        <div class="form-group">
+                            <label for="editName">Name</label>
+                            <input type="text" class="form-control" id="editName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editRelationship">Relationship</label>
+                            <input type="text" class="form-control" id="editRelationship" name="relationship" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editAge">Age</label>
+                            <input type="number" class="form-control" id="editAge" name="age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editContactDetails">Contact Details</label>
+                            <input type="text" class="form-control" id="editContactDetails" name="contactDetails" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadContent(section) {
+            const contentArea = document.getElementById('content-area');
+            clearActiveState();
+            if (section === 'beneficiary') {
+                document.querySelector('.sidebar-nav .nav li:nth-child(2)').classList.add('active');
+                fetch('/phoenix/beneficiaries')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.text();
+                    })
+                    .then(html => contentArea.innerHTML = html)
+                    .catch(error => console.warn('ERROR loading content:', error));
+            } else if (section === 'pension') {
+                document.querySelector('.sidebar-nav .nav li:nth-child(3)').classList.add('active');
+                contentArea.innerHTML = '<h1>Pension Product Management</h1><p>Placeholders for CRUD operations.</p>';
+            } else if (section === 'home') {
+                document.querySelector('.sidebar-nav .nav li:nth-child(1)').classList.add('active');
+                contentArea.innerHTML = '<h1>Welcome to Engineering Transformation Dashboard</h1><p>Explore the sections using the navigation menu on the left.</p>';
+            }
+        }
+
+        function clearActiveState() {
+            const items = document.querySelectorAll('.sidebar-nav .nav li');
+            items.forEach(item => item.classList.remove('active'));
+        }
+
+        // Load home content by default when the page is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent('home');
+        });
+    </script>
+
+    <!-- JavaScript functions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            document.getElementById('addBeneficiaryForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                fetch('/phoenix/beneficiaries', {
+                    method: 'POST',
+                    headers: {
+                        [csrfHeader]: csrfToken
+                    },
+                    body: new URLSearchParams(formData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    $('#addBeneficiaryModal').modal('hide');
+                    loadContent('beneficiary');
+                })
+                .catch(error => console.warn('ERROR adding beneficiary:', error));
+            });
+
+            document.getElementById('editBeneficiaryForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                fetch(`/phoenix/beneficiaries/${formData.get('id')}`, {
+                    method: 'PUT',
+                    headers: {
+                        [csrfHeader]: csrfToken
+                    },
+                    body: new URLSearchParams(formData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    $('#editBeneficiaryModal').modal('hide');
+                    loadContent('beneficiary');
+                })
+                .catch(error => console.warn('ERROR editing beneficiary:', error));
+            });
+        });
+
+        function addBeneficiary() {
+            $('#addBeneficiaryModal').modal('show');
+        }
+
+        function editBeneficiary() {
+        	const selected = getSelectedCheckboxes();
+            if (selected.length === 1) {
+                fetch(`/phoenix/beneficiaries/${selected[0]}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('editId').value = data.id;
+                        document.getElementById('editName').value = data.name;
+                        document.getElementById('editRelationship').value = data.relationship;
+                        document.getElementById('editAge').value = data.age;
+                        document.getElementById('editContactDetails').value = data.contactDetails;
+                        $('#editBeneficiaryModal').modal('show');
+                    })
+                    .catch(error => console.warn('ERROR fetching beneficiary:', error));
+            } else {
+                alert('Please select exactly one beneficiary to edit.');
+            }
+        }
+
+        function deleteBeneficiary() {
+        	const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            const selected = getSelectedCheckboxes();
+            if (selected.length > 0) {
+                if (confirm('Are you sure you want to delete the selected beneficiary(ies)?')) {
+                    selected.forEach(id => {
+                        fetch(`/phoenix/beneficiaries/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                [csrfHeader]: csrfToken
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok ' + response.statusText);
+                            }
+                            loadContent('beneficiary');
+                        })
+                        .catch(error => console.warn('ERROR deleting beneficiary:', error));
+                    });
+                }
+            } else {
+                alert('Please select at least one beneficiary to delete.');
+            }
+        }
+
+        function getSelectedCheckboxes() {
+            const checkboxes = document.getElementsByName('selectedBeneficiary');
+            const selected = [];
+            for (const checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    selected.push(checkbox.value);
+                }
+            }
+            return selected;
+        }
+
+        // Select/Deselect all checkboxes
+        document.addEventListener('click', (event) => {
+            if (event.target.id === 'select-all') {
+                const checkboxes = document.getElementsByName('selectedBeneficiary');
+                for (const checkbox of checkboxes) {
+                    checkbox.checked = event.target.checked;
+                }
+            }
+        });
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+</body>
+</html>

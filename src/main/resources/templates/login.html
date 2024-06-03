@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>User Registration and Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 15px; /* Adds space on the top of the page */
+            padding-bottom: 15px; /* Adds space at the bottom for the footer */
+        }
+        .navbar-custom {
+            background-color: #5b9bd5; /* A lighter shade of blue */
+            color: #fff;
+            padding: 10px 15px;
+            border-bottom: 1px solid #385d8a; /* A darker border for better contrast */
+            text-align: center; /* Centers the text in the navbar */
+        }
+        .navbar-text {
+            font-size: 18px;
+            font-weight: bold;
+            display: inline-block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .form-control {
+            width: 100%;
+            max-width: 300px;
+        }
+        .btn-primary {
+            width: auto;
+            padding: 10px 20px;
+        }
+        .form-group .btn {
+            margin-top: 10px;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #f2f2f2; /* Light grey background for the footer */
+            border-top: 1px solid #e5e5e5; /* Slight border for definition */
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Welcome Message -->
+    <nav class="navbar navbar-default navbar-custom">
+        <div class="container">
+            <span class="navbar-text">
+                Welcome to Engineering Transformation Login
+            </span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form th:action="@{/login}" method="post" class="form-horizontal">
+                    <!-- Error message -->
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        Invalid username or password.
+                    </div>
+                
+                    <!-- Logout message -->
+                    <div th:if="${param.logout}" class="alert alert-info">
+                        You have been successfully logged out.
+                    </div>
+                    
+                    <!-- Username field -->
+                    <div class="form-group">
+                        <label for="username" class="control-label col-xs-12 col-sm-3">Username</label>
+                        <div class="col-xs-12 col-sm-9">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter email id" autofocus>
+                        </div>
+                    </div>
+                    
+                    <!-- Password field -->
+                    <div class="form-group">
+                        <label for="password" class="control-label col-xs-12 col-sm-3">Password</label>
+                        <div class="col-xs-12 col-sm-9">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
+                        </div>
+                    </div>
+                    
+                    <!-- Submit button -->
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <input type="submit" name="login-submit" id="login-submit" class="btn btn-primary" value="Log In">
+                        </div>
+                    </div>
+                    
+                    <!-- Registration link -->
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <a href="/" th:href="@{/registration}">New user registration</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Engineering Transformation. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

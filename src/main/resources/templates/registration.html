@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 15px; /* Adds space on the top of the page */
+            padding-bottom: 15px; /* Adds space at the bottom for the footer */
+        }
+        .navbar-custom {
+            background-color: #5b9bd5; /* Lighter blue for better readability */
+            color: #fff;
+            padding: 10px 15px;
+            border-bottom: 1px solid #385d8a; /* Darker border for contrast */
+            text-align: center; /* Centers the text in the navbar */
+        }
+        .navbar-text {
+            font-size: 18px;
+            font-weight: bold;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 10px; /* Adjust position slightly */
+        }
+        .form-control {
+            width: 100%; /* Full width to align input fields properly */
+            max-width: 300px; /* Control max width to make it look aesthetically pleasing */
+        }
+        .btn-primary, .btn-success {
+            padding: 10px 20px;
+            width: auto; /* Adjust width according to content */
+            background-color: #337ab7; /* Primary button color to match login */
+            border-color: #2e6da4; /* Matching border color */
+        }
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: #f2f2f2;
+            border-top: 1px solid #e5e5e5;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        .form-group .btn {
+            margin-top: 10px; /* Space above the button */
+        }
+        .form-horizontal .form-group {
+            margin-right: 0;
+            margin-left: 0;
+        }
+        .control-label {
+            padding-top: 7px; /* Aligns label text vertically center */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Welcome Message -->
+    <nav class="navbar navbar-default navbar-custom">
+        <div class="container">
+            <span class="navbar-text">
+                Welcome to Engineering Transformation Registration
+            </span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <!-- Success message -->
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">You have successfully registered!</div>
+                </div>
+
+                <form th:action="@{/registration}" method="post" th:object="${user}" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="firstName">First Name</label>
+                        <div class="col-sm-9">
+                            <input id="firstName" class="form-control" th:field="*{firstName}"
+                                   required autofocus="autofocus" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="lastName">Last Name</label>
+                        <div class="col-sm-9">
+                            <input id="lastName" class="form-control" th:field="*{lastName}"
+                                   required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="email">Email</label>
+                        <div class="col-sm-9">
+                            <input id="email" class="form-control" th:field="*{email}" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="password">Password</label>
+                        <div class="col-sm-9">
+                            <input id="password" class="form-control" type="password" th:field="*{password}" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" class="btn btn-success">Register</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="form-group">
+                    <span>Already registered? <a href="/" th:href="@{/login}">Please login</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Engineering Transformation. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
